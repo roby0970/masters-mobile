@@ -40,25 +40,30 @@ class BLEController extends GetxController {
     super.onReady();
   }
 
+  List<BLEReading> getReadings() {
+    Map<int, int> lastValues = {};
+
+    beaconsAndRssi.forEach((key, value) {
+      lastValues.addEntries([MapEntry(beacons[key]!, value.last)]);
+    });
+
+    List<BLEReading> readings = [];
+
+    lastValues.removeWhere((key, value) => value == 0);
+    lastValues.forEach((key, value) {
+      readings.add(BLEReading(idBle: key, rssi: value));
+    });
+
+    return readings;
+  }
+
   void _setupService() {
     service = Timer.periodic(Duration(milliseconds: 4000), (t) async {
       loadingCoordinates(true);
       //take most recent values of each beacon
-      Map<int, int> lastValues = {};
-
-      beaconsAndRssi.forEach((key, value) {
-        lastValues.addEntries([MapEntry(beacons[key]!, value.last)]);
-      });
-
-      List<BLEReading> readings = [];
-
-      lastValues.removeWhere((key, value) => value == 0);
-      lastValues.forEach((key, value) {
-        readings.add(BLEReading(idBle: key, rssi: value));
-      });
 
       var requestbody = jsonEncode(<String, List<BLEReading>>{
-        'source': readings,
+        'source': getReadings(),
       });
       print("Sendgin request, $requestbody");
 

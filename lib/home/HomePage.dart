@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:masters_mobile/ar/ar.dart';
+import 'package:masters_mobile/compass/CompassController.dart';
 import '../ble/BLEController.dart';
 import '../home/HomePageController.dart';
-import '../location/LocationController.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
   final homePageController = Get.put(HomePageController());
-  final locationController = Get.put(LocationController());
   final bleController = Get.put(BLEController());
+  final compassController = Get.put(CompassController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +33,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                Obx(() => Text(compassController.compassValue.toString())),
                 SizedBox(
                   height: 25,
                 ),
@@ -85,6 +88,12 @@ class HomePage extends StatelessWidget {
                                 height: 5,
                                 color: Color(homePageController.pois[i].color!),
                               ),
+                              onTap: () {
+                                homePageController
+                                    .selectedPoi(homePageController.pois[i].id);
+
+                                Get.to(LocalAndWebObjectsWidget());
+                              },
                             );
                           });
                 }),

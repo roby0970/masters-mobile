@@ -12,6 +12,7 @@ class HomePageController extends GetxController {
   RxBool loadingPosition = true.obs;
   RxBool loadingPoi = true.obs;
   RxList<Poi> pois = List<Poi>.empty().obs;
+  RxInt selectedPoi = 0.obs;
   @override
   void onReady() {
     getPos();
