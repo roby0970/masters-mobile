@@ -1,6 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:masters_mobile/ble/BLEController.dart';
 import '../models/poi.dart';
 import '../models/space.dart';
 import 'package:http/http.dart' as http;
@@ -76,6 +77,8 @@ class HomePageController extends GetxController {
 
     if (position.longitude != 999 && position.latitude != 999) {
       await getSpace(position.latitude, position.longitude);
+      BLEController ble = Get.find();
+      ble.start();
       loadingPosition(false);
     }
   }

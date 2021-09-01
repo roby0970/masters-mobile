@@ -7,42 +7,36 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'package:masters_mobile/home/HomePageController.dart';
 import 'package:masters_mobile/models/BLEReading.dart';
+import 'package:masters_mobile/models/Ble.dart';
 import 'package:masters_mobile/models/Coordinate.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 class BLEController extends GetxController {
+  final HomePageController homePageController = Get.find();
   RxInt xCoordinate = 0.obs;
   RxInt yCoordinate = 0.obs;
   RxBool loadingCoordinates = false.obs;
   final flutterReactiveBle = FlutterReactiveBle();
-  static const String ble1 = "BLE #1";
-  static const String ble2 = "BLE #2";
-  static const String ble3 = "BLE #3";
-  static const String ble4 = "BLE #4";
-  static const String ble5 = "BLE #5";
-  final Map<String, int> beacons = {
-    ble1: 1,
-    ble2: 2,
-    ble3: 3,
-    ble4: 4,
-    ble5: 5,
+
+
+
+  Map<String, int> beacons = {
   };
 
   Map<String, List<int>> beaconsAndRssi = {
-    ble1: [0],
-    ble2: [0],
-    ble3: [0],
-    ble4: [0],
-    ble5: [0],
+
   };
   late Timer service;
   @override
   void onReady() {
-    _startBleScan();
-    _setupService();
+
     super.onReady();
   }
-
+  void start() async {
+    await _getBeaconInfo();
+    _startBleScan();
+    _setupService();
+  }
   List<BLEReading> getReadings() {
     Map<int, int> lastValues = {};
 
@@ -124,7 +118,33 @@ class BLEController extends GetxController {
       print(e);
     });
   }
+  Future<void> _getBeaconInfo() async  {
+    final response = await http.get(
+        Uri.parse(
+            "http://${dotenv.env['IP_ADDR']}:${dotenv.env['PORT']}/bles_space/${homePageController.space.value.id}"),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        },
+        );
+    print(response.body);
 
+    final items = json.decode(response.body).cast<Map<String, dynamic>>();
+    List<Ble> newBle = items.map<Ble>((json) {
+      return Ble.fromJson(json);
+    }).toList();
+    int bleCount = 1;
+    newBle.forEach((element) { 
+      beacons.addAll({element.title! : bleCount++});
+      beaconsAndRssi.addAll({element.title! : [0]});
+    });
+    print(beacons);
+    print(beaconsAndRssi);
+
+    
+
+  }
   @override
   void onClose() {
     super.onClose();
