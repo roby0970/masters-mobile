@@ -15,4 +15,9 @@ class ARCoordinate {
         'x': x,
         'y': y,
       };
+
+      @override
+  String toString() {
+    return "$x, $y";
+  }
 }

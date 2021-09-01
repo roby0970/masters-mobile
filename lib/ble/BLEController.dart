@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
+import 'package:masters_mobile/home/HomePageController.dart';
 import 'package:masters_mobile/models/BLEReading.dart';
 import 'package:masters_mobile/models/Coordinate.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class BLEController extends GetxController {
   RxInt xCoordinate = 0.obs;
@@ -57,12 +60,34 @@ class BLEController extends GetxController {
     return readings;
   }
 
-  void _setupService() {
-    service = Timer.periodic(Duration(milliseconds: 4000), (t) async {
+  void _setupService() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String name = "Unknown";
+    if (Platform.isAndroid) {
+      try {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          name = androidInfo.model!;
+          } catch (e){
+            name = "Android";
+       }   
+       
+    }
+    else if (Platform.isIOS) {
+      try {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+          name = iosInfo.utsname.machine!;
+          } catch (e){
+            name = "Android";
+       }   
+    }
+    HomePageController homePageController = Get.find();
+    service = Timer.periodic(Duration(milliseconds: 10000), (t) async {
       loadingCoordinates(true);
       //take most recent values of each beacon
 
-      var requestbody = jsonEncode(<String, List<BLEReading>>{
+      var requestbody = jsonEncode(<String, dynamic>{
+        'name': name,
+        'idspace' : homePageController.space.value.id,
         'source': getReadings(),
       });
       print("Sendgin request, $requestbody");

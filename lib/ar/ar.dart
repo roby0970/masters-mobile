@@ -7,12 +7,10 @@ import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:masters_mobile/ar/ARController.dart';
 import 'package:masters_mobile/models/ARCoordinate.dart';
 import 'package:vector_math/vector_math_64.dart';
-import 'dart:math';
 
 class LocalAndWebObjectsWidget extends StatefulWidget {
   LocalAndWebObjectsWidget({Key? key}) : super(key: key);
@@ -33,6 +31,14 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       body: Container(
         child: Stack(
           children: [
+            Positioned(
+              top: 20,
+              left: 20,
+              child: IconButton(icon: Icon(Icons.disabled_by_default_rounded), color: Color(0xffffff) 
+               , iconSize: 30
+              , onPressed: () {
+              Get.back();
+            },)),
             ARView(
               onARViewCreated: onARViewCreated,
               planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
@@ -47,7 +53,13 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
                     children: [
                       ElevatedButton(
                           onPressed: onLocalObjectAtOriginButtonPressed,
-                          child: Text("Add/Remove Local\nobject at Origin")),
+                          child: Text("AddLocal\nobject at Origin")),
+                          ElevatedButton(
+                          onPressed: clearObjects,
+                          child: Text("Remove Local\nobject at Origin")),
+                          ElevatedButton(
+                          onPressed: destroy,
+                          child: Text("Destroz")),
                     ],
                   ),
                 ],
@@ -58,7 +70,11 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       ),
     );
   }
-
+  void destroy() {
+    arController.attachedNodes.clear();
+    arController.coordToShow.clear();
+    Get.back();
+  }
   void onARViewCreated(
       ARSessionManager arSessionManager,
       ARObjectManager arObjectManager,
@@ -76,26 +92,39 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
         );
     this.arObjectManager.onInitialize();
 
-    this.localObjectNode = ARNode(
+    /*this.localObjectNode = ARNode(
         type: NodeType.localGLTF2,
         uri: "Models/Chicken_01/Chicken_01.gltf",
         scale: Vector3(0.2, 0.2, 0.2),
         position: Vector3(0.0, 0.0, 2.0),
-        rotation: Vector4(1.0, 0.0, 0.0, 0.0));
+        rotation: Vector4(1.0, 0.0, 0.0, 0.0));*/
   }
 
   Future<void> attachObjects() async {
-    print("Attaching: ");
-    for (int i = 1; i < arController.coordToShow.length; i + 2) {
+    print(arController.coordToShow);
+    Future.forEach<ARCoordinate>(arController.coordToShow, (element) async {
+      print(element);
       var newCoord = ARNode(
           type: NodeType.localGLTF2,
           uri: "Models/Chicken_01/Chicken_01.gltf",
           scale: Vector3(0.2, 0.2, 0.2),
-          position: Vector3(0, -1 * arController.coordToShow[i].y!,
-              arController.coordToShow[i].x!),
+          position: Vector3(element.x! ,0.0, - element.y!),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
       print("Attaching: ${newCoord.position}");
       bool? res = await this.arObjectManager.addNode(newCoord);
+      arController.attachedNodes.add(newCoord);
+      print(res);
+    });
+    
+  }
+  //arController.coordToShow[i].y!, 0, arController.coordToShow[i].x!
+  Future<void> clearObjects() async {
+    
+    print("Clearing: ");
+    for (int i = 0; i < arController.attachedNodes.length; i + 1) {
+      
+      bool? res = await this.arObjectManager.removeNode(arController.attachedNodes[i]);
+      arController.attachedNodes.removeAt(i);
       print(res);
     }
   }

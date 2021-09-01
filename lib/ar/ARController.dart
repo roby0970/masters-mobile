@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:masters_mobile/ble/BLEController.dart';
@@ -10,6 +11,7 @@ import 'package:masters_mobile/models/ARCoordinate.dart';
 
 class ARController extends GetxController {
   RxList<ARCoordinate> coordToShow = RxList<ARCoordinate>.empty();
+  RxList<ARNode> attachedNodes = RxList<ARNode>.empty();
   @override
   void onReady() {
     getRoute();
@@ -49,6 +51,12 @@ class ARController extends GetxController {
     }).toList();
 
     coordToShow.clear();
-    coordToShow.addAll(newCoords);
+    int i = 1;
+    newCoords.forEach((element) {
+      if ( i != 0)coordToShow.add(element);
+      i++;
+    });
+    print(newCoords);
+    //coordToShow.addAll(newCoords);
   }
 }
