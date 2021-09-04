@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:masters_mobile/ble/BLEController.dart';
-import 'package:masters_mobile/compass/CompassController.dart';
-import 'package:masters_mobile/home/HomePageController.dart';
+import 'package:masters_mobile/controllers/BLEController.dart';
+import 'package:masters_mobile/controllers/CompassController.dart';
+import 'package:masters_mobile/controllers/HomePageController.dart';
 import 'package:http/http.dart' as http;
 import 'package:masters_mobile/models/ARCoordinate.dart';
 

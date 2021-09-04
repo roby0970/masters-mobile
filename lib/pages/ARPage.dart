@@ -8,7 +8,7 @@ import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:get/get.dart';
-import 'package:masters_mobile/ar/ARController.dart';
+import 'package:masters_mobile/controllers/ARController.dart';
 import 'package:masters_mobile/models/ARCoordinate.dart';
 import 'package:vector_math/vector_math_64.dart';
 

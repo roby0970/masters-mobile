@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masters_mobile/ar/ar.dart';
-import 'package:masters_mobile/compass/CompassController.dart';
-import '../ble/BLEController.dart';
-import '../home/HomePageController.dart';
+import 'package:masters_mobile/pages/ARPage.dart';
+import 'package:masters_mobile/controllers/CompassController.dart';
+import '../controllers/BLEController.dart';
+import '../controllers/HomePageController.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
                 ),
                 Obx(() {
                   return homePageController.loadingPosition.value
-                      ? CircularProgressIndicator()
+                      ? CircularProgressIndicator.adaptive()
                       : Text(
                           "${homePageController.space.value.title}",
                           style: TextStyle(
@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                 ),
                 Obx(() {
                   return homePageController.loadingPoi.value
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(child: CircularProgressIndicator.adaptive())
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: BouncingScrollPhysics(),

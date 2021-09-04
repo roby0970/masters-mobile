@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-import 'package:masters_mobile/home/HomePageController.dart';
+import 'package:masters_mobile/controllers/HomePageController.dart';
 import 'package:masters_mobile/models/BLEReading.dart';
 import 'package:masters_mobile/models/Ble.dart';
 import 'package:masters_mobile/models/Coordinate.dart';

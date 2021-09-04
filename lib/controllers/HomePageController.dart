@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:masters_mobile/ble/BLEController.dart';
+import 'package:masters_mobile/controllers/BLEController.dart';
 import '../models/poi.dart';
 import '../models/space.dart';
 import 'package:http/http.dart' as http;

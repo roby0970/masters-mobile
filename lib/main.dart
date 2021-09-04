@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import 'home/HomePage.dart';
+import 'pages/HomePage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
